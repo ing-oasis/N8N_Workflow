@@ -1,0 +1,448 @@
+{
+  "name": "Online_Content_Curation",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -3280,
+        520
+      ],
+      "id": "1ea70215-d69f-4770-b4d3-f4b4ba1de3b9",
+      "name": "When chat message received",
+      "webhookId": "90d6f998-223d-4543-9fa4-0ffc9e00505b"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.chatInput }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3060,
+        520
+      ],
+      "id": "e21d9824-7d0d-4d34-8d18-61e9154725ab",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1,
+      "position": [
+        -2840,
+        520
+      ],
+      "id": "e78aba03-2441-4316-8f26-6affd16da2c0",
+      "name": "XML"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "urlset.url",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -2620,
+        520
+      ],
+      "id": "b98e4231-3eac-4e49-b94f-12667e49de32",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "maxItems": 2
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -2400,
+        520
+      ],
+      "id": "10c869f6-1894-47b1-961a-95938d2c0b4f",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2180,
+        520
+      ],
+      "id": "2d31deb0-cd90-471e-a459-5f3cd7db0950",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://host.docker.internal:11235/crawl",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "urls",
+              "value": "={{ $json.loc }}"
+            },
+            {
+              "name": "priority",
+              "value": "10"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1900,
+        520
+      ],
+      "id": "af33c033-ff3d-4a53-9f79-481d882b5432",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "amount": 7
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -1620,
+        340
+      ],
+      "id": "da4c6878-869a-490b-a898-67777547d2c2",
+      "name": "Wait",
+      "webhookId": "6ada5209-a61e-41a7-986c-22ee8b56022c"
+    },
+    {
+      "parameters": {
+        "url": "= http://host.docker.internal:11235/task/{{ $json.task_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1400,
+        340
+      ],
+      "id": "7259897d-a06e-4226-9dc8-a5e976e9e219",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a137bd74-4062-4aab-92f5-fca26c311ae3",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1180,
+        340
+      ],
+      "id": "4c29035e-1131-4136-9868-6e98721c4368",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Role Description:\n\nYou are an expert in information structuring and knowledge base development. Always maintain a professional tone. Your task is to organize markdown data into a structured, readable format suitable for an LLM-driven RAG (Retrieval-Augmented Generation) knowledge base.↳\n\nTask Requirements:\n\nContent Analysis\n\nIdentify key content and main structure within the markdown data.\n\nStructured Organization\n\nOrganize information using clear headings and a hierarchical logic for easy retrieval and understanding.\n\nRetain all details that may be valuable for answering user queries.\n\nFAQ Creation (if applicable)\n\nExtract frequently asked questions based on the content and provide clear, direct answers.\n\nReadability Enhancement\n\nOptimize formatting using bullet points, numbered lists, and paragraph breaks for better clarity.\n\nClean the output thoroughly—remove all AI-generated commentary and retain only the essential, refined data.\n\nResponse Guidelines:\n\nCompleteness: Ensure all relevant information is preserved. Do not omit content that may be valuable for search or comprehension.\n\nAccuracy: FAQs must closely align with the content, and answers should be clear, concise, and user-focused.\n\nStructural Optimization: The final output must be suitable for chunked storage, vectorization, and efficient retrieval.\n\nData Input: <markdown>{{ $json.result.markdown }}</markdown>",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -960,
+        240
+      ],
+      "id": "12e343dc-a5d1-4c0e-88ac-781e1aeaeba6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama3:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        500
+      ],
+      "id": "7fe33405-2ecb-4a64-bf61-c8a64a6e5a0a",
+      "name": "Ollama Chat Model"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/home/node/{{new Date().toISOString()}}.md",
+        "dataPropertyName": "=data",
+        "options": {
+          "append": false
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        240
+      ],
+      "id": "ff8ddba1-67b5-4676-9da2-d00eb636114d",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -380,
+        240
+      ],
+      "id": "c116e88f-328e-4450-87a0-c14e9744a405",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        240
+      ],
+      "id": "646ded12-8ece-4ab8-baa8-1ea7840350f9",
+      "name": "Split Out1"
+    }
+  ],
+  "pinData": {
+    "AI Agent": [
+      {
+        "json": {
+          "output": "Here is the organized and structured output:\n\n**Crawl4AI Documentation (v0.6.x)**\n\n### Overview of Some Important Advanced Features\n\nThis tutorial covers advanced features in Crawl4AI, including proxy usage, PDF and screenshot capturing, handling SSL certificates, custom headers, session persistence, and robots.txt compliance.\n\n#### 1. Proxy Usage\n\n* `proxy_config` expects a dictionary with `server` and optional auth credentials.\n* Many commercial proxies provide an HTTP/HTTPS “gateway” server that you specify in `server`.\n* If your proxy doesn’t need auth, omit `username`/`password`.\n\n### Code Example\n```python\nimport asyncio from crawl4ai import AsyncWebCrawler, BrowserConfig async def main(): browser_cfg = BrowserConfig( proxy_config={ \"server\": \"http://proxy.example.com:8080\", \"username\": \"myuser\", \"password\": \"mypass\", }, headless=True ) crawler_cfg = CrawlerRunConfig( verbose=True ) async with AsyncWebCrawler(config=browser_cfg) as crawler: result = await crawler.arun( url=\"https://www.whatismyip.com/\", config=crawler_cfg ) if result.success: print(\"[OK] Page fetched via proxy.\")\n```\n\n#### 2. Capturing PDFs & Screenshots\n\n* `pdf=True` triggers PDF capturing.\n* `screenshot=True` captures the entire page or a specific element.\n\n### Code Example\n```python\nimport os, asyncio from base64 import b64decode from crawl4ai import AsyncWebCrawler async def main(): crawler_cfg = CrawlerRunConfig( pdf=True, screenshot=True ) async with AsyncWebCrawler() as crawler: result = await crawler.arun(\"https://example.com\") if result.pdf: with open(\"result.pdf\", \"wb\") as f: f.write(b64decode(result.pdf))\n```\n\n#### 3. Handling SSL Certificates\n\n* `fetch_ssl_certificate=True` triggers SSL certificate retrieval.\n* `result.ssl_certificate` includes methods (`to_json`, `to_pem`, `to_der`) for saving in various formats.\n\n### Code Example\n```python\nimport asyncio from crawl4ai import AsyncWebCrawler async def main(): crawler_cfg = CrawlerRunConfig( fetch_ssl_certificate=True ) async with AsyncWebCrawler() as crawler: result = await crawler.arun(\"https://example.com\") if result.ssl_certificate: print(\"SSL Issuer CN:\", result.ssl_certificate.issuer.get(\"CN\", \"\"))\n```\n\n#### 4. Custom Headers\n\n* Set custom headers at the crawler strategy level.\n* Pass headers directly to `arun()`.\n\n### Code Example\n```python\nimport asyncio from crawl4ai import AsyncWebCrawler async def main(): crawler_cfg = CrawlerRunConfig( headers={\"Accept-Language\": \"en-US,en;q=0.8\"} ) async with AsyncWebCrawler() as crawler: result = await crawler.arun(\"https://example.com\", config=crawler_cfg)\n```\n\n#### 5. Session Persistence & Local Storage\n\n* `storage_state` dictionary provides cookies, localStorage, and other storage data.\n* Export and reuse the browser context.\n\n### Code Example\n```python\nimport os, asyncio from crawl4ai import AsyncWebCrawler async def main(): storage_dict = { \"cookies\": [ { \"name\": \"session\", \"value\": \"abcd1234\", \"domain\": \"example.com\", \"path\": \"/\", \"expires\": 1699999999.0, \"httpOnly\": False, \"secure\": False, \"sameSite\": \"None\" } ], \"origins\": [ { \"origin\": \"https://example.com\", \"localStorage\": [ {\"name\": \"token\", \"value\": \"my_auth_token\"} ] } ] } async with AsyncWebCrawler() as crawler: result = await crawler.arun(\"https://example.com\", storage_state=storage_dict)\n```\n\n#### 6. Robots.txt Compliance\n\n* `check_robots_txt=True` enables robots.txt checking.\n* Respect robots.txt rules and cache them for efficiency.\n\n### Code Example\n```python\nimport asyncio from crawl4ai import AsyncWebCrawler async def main(): crawler_cfg = CrawlerRunConfig( check_robots_txt=True ) async with AsyncWebCrawler() as crawler: result = await crawler.arun(\"https://example.com\", config=crawler_cfg) if not result.success and result.status_code == 403: print(\"Access denied by robots.txt\")\n```\n\n### Putting It All Together\n\nThis example combines multiple advanced features, including proxy usage, PDF and screenshot capturing, SSL certificate handling, custom headers, session persistence, and robots.txt compliance.\n\n```python\nimport os, asyncio from base64 import b64decode from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig async def main(): browser_cfg = BrowserConfig( proxy_config={ \"server\": \"http://proxy.example.com:8080\", \"username\": \"myuser\", \"password\": \"mypass\", }, headless=True ) crawler_cfg = CrawlerRunConfig( pdf=True, screenshot=True, fetch_ssl_certificate=True, cache_mode=CacheMode.BYPASS, headers={\"Accept-Language\": \"en-US,en;q=0.8\"}, storage_state=\"my_storage.json\" ) async with AsyncWebCrawler(config=browser_cfg) as crawler: result = await crawler.arun( url=\"https://secure.example.com/protected\", config=crawler_cfg )\n```\n\n### Conclusion & Next Steps\n\nThis tutorial has covered advanced features in Crawl4AI, including proxy usage, PDF and screenshot capturing, handling SSL certificates, custom headers, session persistence, and robots.txt compliance. With these power tools, you can build robust scraping workflows that mimic real user behavior, handle secure sites, capture detailed snapshots, and manage sessions across multiple runs—streamlining your entire data collection pipeline.\n\n**Last Updated**: 2025-01-01"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "XML": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        []
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1285093f-c4e1-414a-a6d6-8c152e2c284e",
+  "meta": {
+    "instanceId": "af69c3a4f4904570a9e590cc60e69a2eb5a9cb5718e67365be3119309ab30188"
+  },
+  "id": "9tT4WZDdr44J0jCG",
+  "tags": []
+}
