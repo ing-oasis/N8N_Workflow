@@ -1,0 +1,623 @@
+{
+  "name": "Data Analyst",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.question }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are a senior marketing data analyst with expertise in campaign performance analysis. Your task is to analyze marketing data and answer specific strategic questions. The questions is {{ $json.question }}.\n\nCAPABILITIES:\n- Analyze campaign performance data (budgets, conversions, platforms, dates)\n- Calculate key marketing metrics (ROI, CPA, conversion rates, etc.)\n- Identify trends, patterns, and insights\n- Generate data for visualizations\n- Provide actionable recommendations\n\nANALYSIS FRAMEWORK:\n1. Understand the question context and what data is needed\n2. Examine the provided datasets thoroughly\n3. Calculate relevant metrics\n4. Identify key insights and patterns\n5. Suggest appropriate visualizations\n6. Provide actionable recommendations\n\nOUTPUT REQUIREMENTS:\nYou must return a JSON response with this exact structure, and the question_analysis would be converted to html in the next stage, so, but use markdown format in analysis contents:\n{\n  \"question_analysis\": {\n    \"question\": \"The original question being analyzed.\",\n    \"data_summary\": \"Two datasets were analyzed.\",\n    \"key_metrics\": \"Values and explanations.\",\n    \"insights\": [\n      \"Key insight 1 with supporting data.\",\n      \"Key insight 2 with supporting data.\"\n    ],\n    \"recommendations\": \"Specific actionable recommendation.\",\n    \"confidence_level\": \"high\",\n    \"data_quality_notes\": \"Any limitations or data quality issues.\"\n  },\n  \"chart_specification\": {\n    \"type\": \"bar\",\n    \"data\": {\n      \"labels\": [\"Q1\", \"Q2\", \"Q3\", \"Q4\"],\n      \"datasets\": [\n        {\n          \"label\": \"Users\",\n          \"data\": [50, 60, 70, 180]\n        }\n      ]\n    },\n    \"options\": {\n      \"responsive\": true,\n      \"plugins\": {\n        \"title\": {\n          \"display\": true,\n          \"text\": \"Chart Title\"\n        }\n      }\n    }\n  },\n  \"chart_description\": \"What this chart shows and why it's relevant.\"\n}\n\nCHART OPTIMIZATION RULES:\n- Keep labels concise (max 15 characters each) - use abbreviations like \"FB-Teens\", \"IG-Adults\", \"YT-Fam\"\n- Limit datasets to maximum 3 for readability\n- For dual-metric charts, prefer separate charts or normalized data\n- Use simple color schemes - avoid complex styling\n- Keep total chart configuration under 1500 characters when JSON stringified\n- Prioritize clarity over complexity\n- If data has >10 categories, group smaller ones into \"Others\"\n- Use round numbers where appropriate (avoid excessive decimals)\n\nIMPORTANT RULES:\n- Base analysis only on the actual data provided\n- Calculate metrics accurately using the available data\n- Use markdown format for tables at Key Metrics part, be careful about the table structure, such as avoiding to use $ sign, and do not put a New line signal after breviations, etc.\n- Suggest visualizations that best represent the insights\n- Provide specific, actionable recommendations\n- Indicate confidence level based on data quality and completeness\n- Return only valid JSON format, avoiding double quotes issues\n- Ensure chart configurations are QuickChart-compatible and URL-safe"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        2188,
+        580
+      ],
+      "id": "4e9b1476-c68a-4317-a3bf-749b891b007d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2156,
+        800
+      ],
+      "id": "8a3f4892-a77e-4144-8fe4-1ab7af82c1a1",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "dRUQ9ancGko63wY0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      },
+      "notes": "1"
+    },
+    {
+      "parameters": {
+        "authentication": "nocoDbApiToken",
+        "operation": "getAll",
+        "workspaceId": "wovbwxiy",
+        "projectId": "pxioc6gzz9sb7ar",
+        "table": "mb1fseo2t0w56u2",
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.nocoDbTool",
+      "typeVersion": 3,
+      "position": [
+        2276,
+        800
+      ],
+      "id": "858967ff-13d9-4b04-9138-0cc349204bc5",
+      "name": "Campaign_dataset",
+      "credentials": {
+        "nocoDbApiToken": {
+          "id": "vMmmjNgfCj73BipF",
+          "name": "NocoDB Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "nocoDbApiToken",
+        "operation": "getAll",
+        "workspaceId": "wovbwxiy",
+        "projectId": "pxioc6gzz9sb7ar",
+        "table": "mvoa7pf6hil2m4t",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.nocoDbTool",
+      "typeVersion": 3,
+      "position": [
+        2396,
+        800
+      ],
+      "id": "9e71fc07-cabf-41e4-a002-2ddfb5149644",
+      "name": "Subscriber_dataset",
+      "credentials": {
+        "nocoDbApiToken": {
+          "id": "vMmmjNgfCj73BipF",
+          "name": "NocoDB Token account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        20,
+        580
+      ],
+      "id": "4dfc2ff9-d92a-4099-bcc5-b8933363fb04",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.list }}",
+        "options": {
+          "systemMessage": "=You are a senior data analyst and business intelligence expert conducting a strategic brainstorming session. Your role is to analyze the databases and identify the most valuable business insights that would drive executive decision-making.\n\nKey responsibilities:\n- Think like a CMO, VP of Marketing, or Growth Director\n- Focus on actionable insights that drive revenue and optimize marketing spend\n- Consider data relationships, trends, and performance patterns\n- Generate questions that reveal growth opportunities, operational gaps, and strategic advantages\n- Prioritize insights that can influence budget allocation, campaign optimization, and customer acquisition strategies\n\nAnalysis approach:\n- Examine table structures and relationships to understand the business model\n- Identify key performance indicators and success metrics\n- Look for patterns in campaign performance, subscriber behavior, and conversion funnels\n- Consider seasonal trends, platform effectiveness, and audience segmentation opportunities\n- Focus on ROI, customer lifetime value, and acquisition cost optimization\n\nThe columns of the database are:{{ $json.list }}. The connection relationship between is these two tables share the same CampaignID.\n\n--Please using json format {[{\"questions\":\"question1\"}, {\"questions\":\"question2\"}, ...}] withou markdown format to give the top 4 questions that you are most interested about."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        580
+      ],
+      "id": "b65139a2-4fad-4a48-90e3-0d308ff52b7a",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "url": "https://app.nocodb.com/api/v2/meta/bases/pzqxeq01bhgr2r9/tables",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nocoDbApiToken",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        580
+      ],
+      "id": "d59bcf70-774a-4a19-a59d-41b70a5df2e4",
+      "name": "Get Tables",
+      "credentials": {
+        "nocoDbApiToken": {
+          "id": "vMmmjNgfCj73BipF",
+          "name": "NocoDB Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "list",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        460,
+        580
+      ],
+      "id": "7470279c-513d-4f04-80f9-e6d0572c4fd8",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1428,
+        800
+      ],
+      "id": "9a23bde0-e1a3-4f3b-bc46-2ec27c69a1cc",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "dRUQ9ancGko63wY0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      },
+      "notes": "1"
+    },
+    {
+      "parameters": {
+        "url": "=https://app.nocodb.com/api/v2/tables/{{ $json.id }}/records",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "nocoDbApiToken",
+        "options": {
+          "batching": {
+            "batch": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        580
+      ],
+      "id": "ea483eb7-b360-412f-8e9b-dfc1a1f4adc5",
+      "name": "HTTP Request1",
+      "credentials": {
+        "nocoDbApiToken": {
+          "id": "vMmmjNgfCj73BipF",
+          "name": "NocoDB Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9961dfcb-f50f-4184-bbe0-5a11c61533b8",
+              "name": "list",
+              "value": "={{ $json.list[0].keys() }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        900,
+        580
+      ],
+      "id": "7e1cc38c-5ca8-4280-8df6-af6dd504c980",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "list"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        580
+      ],
+      "id": "35507d32-31ca-4333-b969-ca8ed40538ef",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.output;\nconst parsed = JSON.parse(raw);\n\nreturn parsed.map(item => ({\n  json: {\n    question: item.questions\n  }\n}));\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1716,
+        580
+      ],
+      "id": "f7c1ed5e-3a61-4563-99c7-b05774fb8d59",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4cf26b61-64c3-4dc4-a97f-97daf671e2a2",
+              "name": "question_analysis",
+              "value": "={{ $json.output.replace(/^```json\\n|```$/g, \"\").parseJson().question_analysis}}",
+              "type": "string"
+            },
+            {
+              "id": "8b558de7-2368-4bea-8919-27523f5cd629",
+              "name": "visual",
+              "value": "={{ $json.output.replace(/^```json\\n|```$/g, \"\").parseJson().chart_specification }}",
+              "type": "string"
+            },
+            {
+              "id": "3e87e9dc-0ead-48f8-8a52-ff22b5aef7b8",
+              "name": "description",
+              "value": "={{ $json.output.replace(/^```json\\n|```$/g, \"\").parseJson().chart_description }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2816,
+        580
+      ],
+      "id": "31da0d5c-bfa4-4e76-ade0-e2d1c4b7668a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "question",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1936,
+        580
+      ],
+      "id": "d4e7df95-5a9d-4915-9a13-753a20946065",
+      "name": "Questions Split Out"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2596,
+        580
+      ],
+      "id": "7c9b3bbe-5cd1-4179-8ed9-2caff5fd94d6",
+      "name": "Wait",
+      "webhookId": "41bf7fe4-ae2a-4f47-b05e-5815f0332c96"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "markdownText",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        3256,
+        580
+      ],
+      "id": "908a953d-d2d6-457a-950f-ea9bc55adab0",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{DateTime.now()}}.md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        3476,
+        580
+      ],
+      "id": "80700112-42fb-42d2-9e68-a8373193a8bb",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process all input items and combine into single markdown document\nconst allItems = $input.all();\nconst markdownSections = Array();\n\nallItems.forEach((item, index) => {\n  try {\n    const visual = item.json.visual;\n    const description = item.json.description;\n    \n    // Parse JSON string to object\n    const data = JSON.parse(item.json.question_analysis);\n    \n    // Encode visual JSON for URL (must be URL-safe!)\n    const encodedVisual = encodeURIComponent(visual);\n    const image = `https://quickchart.io/chart?c=${encodedVisual}`;\n    \n    // Create section header\n    const sectionHeader = `# Part ${index + 1}`;\n    \n    // Convert each key-value into properly formatted Markdown\n    const analysisContent = Object.entries(data).map(([field, value]) => {\n      const title = field\n        .replace(/_/g, ' ')\n        .replace(/\\b\\w/g, letter => letter.toUpperCase());\n      \n      // Format different types of content appropriately\n      let formattedValue = value;\n      \n      // Handle arrays (like insights)\n      if (Array.isArray(value)) {\n        formattedValue = value.map(item => `- ${item}`).join('\\n');\n      }\n      // Handle objects or complex structures\n      else if (typeof value === 'object' && value !== null) {\n        formattedValue = JSON.stringify(value, null, 2);\n      }\n      // Handle long text content\n      else if (typeof value === 'string' && value.length > 200) {\n        // Break long paragraphs into readable chunks\n        formattedValue = value.replace(/\\.\\s+/g, '.\\n\\n');\n      }\n      \n      return `## ${title}\\n\\n${formattedValue}`;\n    }).join('\\n\\n');\n    \n    // Create chart section\n    const chartSection = `## Visualization\\n\\n![Chart](${image})`;\n    \n    // Create description section\n    const descriptionSection = `## Chart Description\\n\\n${description}`;\n    \n    // Combine all parts for this item\n    const itemMarkdown = [\n      sectionHeader,\n      analysisContent,\n      chartSection,\n      descriptionSection,\n      '---' // Section separator\n    ].join('\\n\\n');\n    \n    markdownSections.push(itemMarkdown);\n    \n  } catch (error) {\n    // Handle parsing errors gracefully\n    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';\n    markdownSections.push(`# Analysis Report ${index + 1} - Error\\n\\nFailed to process item: ${errorMessage}\\n\\n---`);\n  }\n});\n\n// Combine all sections with proper document structure\nconst documentTitle = `# Data Analysis Report\\n\\n*Generated on ${new Date().toISOString().split('T')[0]}*\\n\\n`;\n// Create table of contents with actual question details\nconst tableOfContents = `## Table of Contents\\n\\n${allItems.map((item, index) => {\n  try {\n    const data = JSON.parse(item.json.question_analysis);\n    const question = data.question || `Analysis Report ${index + 1}`;\n    // Truncate long questions for TOC readability\n    const shortQuestion = question.length > 100 ? question.substring(0, 100) + '...' : question;\n    return `${index + 1}. [${shortQuestion}](#analysis-report-${index + 1})`;\n  } catch (error) {\n    return `${index + 1}. [Analysis Report ${index + 1} - Error](#analysis-report-${index + 1})`;\n  }\n}).join('\\n')}\\n\\n---\\n\\n`;\n\nconst fullDocument = [\n  documentTitle,\n  tableOfContents,\n  markdownSections.join('\\n\\n')\n].join('');\n\nreturn [\n  {\n    json: {\n      markdownText: fullDocument,\n      totalSections: allItems.length,\n      generatedAt: new Date().toISOString()\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3036,
+        580
+      ],
+      "id": "07356cb2-8bec-4237-a49e-963bff7cefe9",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "content": "## extract Dataset columns and use AI to generate questions",
+        "height": 580,
+        "width": 1880
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        440
+      ],
+      "id": "abbca382-6625-408d-bca6-146ecf631f74",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Question Process",
+        "height": 580,
+        "width": 1080,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        440
+      ],
+      "id": "4fa050f3-3362-464c-8314-63970b6bafa9",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Document Process",
+        "height": 580,
+        "width": 700,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3020,
+        440
+      ],
+      "id": "479a4e36-b3ae-4631-b763-b5e8dd94627d",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Campaign_dataset": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subscriber_dataset": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Tables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Tables": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Questions Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Questions Split Out": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "693091d0-90f1-4430-8dcf-83fad96af1f8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "af69c3a4f4904570a9e590cc60e69a2eb5a9cb5718e67365be3119309ab30188"
+  },
+  "id": "SoAo99Qo5xS8veSu",
+  "tags": []
+}
