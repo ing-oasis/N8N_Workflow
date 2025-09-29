@@ -1,40 +1,22 @@
 {
-  "name": "Data Analyst",
+  "name": "Data_Analyst",
   "nodes": [
     {
       "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.question }}",
-        "hasOutputParser": true,
-        "options": {
-          "systemMessage": "=You are a senior marketing data analyst with expertise in campaign performance analysis. Your task is to analyze marketing data and answer specific strategic questions. The questions is {{ $json.question }}.\n\nCAPABILITIES:\n- Analyze campaign performance data (budgets, conversions, platforms, dates)\n- Calculate key marketing metrics (ROI, CPA, conversion rates, etc.)\n- Identify trends, patterns, and insights\n- Generate data for visualizations\n- Provide actionable recommendations\n\nANALYSIS FRAMEWORK:\n1. Understand the question context and what data is needed\n2. Examine the provided datasets thoroughly\n3. Calculate relevant metrics\n4. Identify key insights and patterns\n5. Suggest appropriate visualizations\n6. Provide actionable recommendations\n\nOUTPUT REQUIREMENTS:\nYou must return a JSON response with this exact structure, and the question_analysis would be converted to html in the next stage, so, but use markdown format in analysis contents:\n{\n  \"question_analysis\": {\n    \"question\": \"The original question being analyzed.\",\n    \"data_summary\": \"Two datasets were analyzed.\",\n    \"key_metrics\": \"Values and explanations.\",\n    \"insights\": [\n      \"Key insight 1 with supporting data.\",\n      \"Key insight 2 with supporting data.\"\n    ],\n    \"recommendations\": \"Specific actionable recommendation.\",\n    \"confidence_level\": \"high\",\n    \"data_quality_notes\": \"Any limitations or data quality issues.\"\n  },\n  \"chart_specification\": {\n    \"type\": \"bar\",\n    \"data\": {\n      \"labels\": [\"Q1\", \"Q2\", \"Q3\", \"Q4\"],\n      \"datasets\": [\n        {\n          \"label\": \"Users\",\n          \"data\": [50, 60, 70, 180]\n        }\n      ]\n    },\n    \"options\": {\n      \"responsive\": true,\n      \"plugins\": {\n        \"title\": {\n          \"display\": true,\n          \"text\": \"Chart Title\"\n        }\n      }\n    }\n  },\n  \"chart_description\": \"What this chart shows and why it's relevant.\"\n}\n\nCHART OPTIMIZATION RULES:\n- Keep labels concise (max 15 characters each) - use abbreviations like \"FB-Teens\", \"IG-Adults\", \"YT-Fam\"\n- Limit datasets to maximum 3 for readability\n- For dual-metric charts, prefer separate charts or normalized data\n- Use simple color schemes - avoid complex styling\n- Keep total chart configuration under 1500 characters when JSON stringified\n- Prioritize clarity over complexity\n- If data has >10 categories, group smaller ones into \"Others\"\n- Use round numbers where appropriate (avoid excessive decimals)\n\nIMPORTANT RULES:\n- Base analysis only on the actual data provided\n- Calculate metrics accurately using the available data\n- Use markdown format for tables at Key Metrics part, be careful about the table structure, such as avoiding to use $ sign, and do not put a New line signal after breviations, etc.\n- Suggest visualizations that best represent the insights\n- Provide specific, actionable recommendations\n- Indicate confidence level based on data quality and completeness\n- Return only valid JSON format, avoiding double quotes issues\n- Ensure chart configurations are QuickChart-compatible and URL-safe"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2,
-      "position": [
-        2188,
-        580
-      ],
-      "id": "4e9b1476-c68a-4317-a3bf-749b891b007d",
-      "name": "AI Agent"
-    },
-    {
-      "parameters": {
-        "modelName": "models/gemini-2.5-flash",
+        "modelName": "models/gemini-2.5-pro",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        2156,
-        800
+        2112,
+        512
       ],
-      "id": "8a3f4892-a77e-4144-8fe4-1ab7af82c1a1",
+      "id": "b6fdf1ac-380f-41f1-90db-d677d863f5e2",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "dRUQ9ancGko63wY0",
+          "id": "ufXZ3L8KyTKcxPbd",
           "name": "Google Gemini(PaLM) Api account"
         }
       },
@@ -53,14 +35,14 @@
       "type": "n8n-nodes-base.nocoDbTool",
       "typeVersion": 3,
       "position": [
-        2276,
-        800
+        2240,
+        512
       ],
-      "id": "858967ff-13d9-4b04-9138-0cc349204bc5",
+      "id": "72c3862a-2b4b-41ed-b853-6fa7711061fd",
       "name": "Campaign_dataset",
       "credentials": {
         "nocoDbApiToken": {
-          "id": "vMmmjNgfCj73BipF",
+          "id": "mLHxHHHMdJOGg94m",
           "name": "NocoDB Token account"
         }
       }
@@ -77,14 +59,14 @@
       "type": "n8n-nodes-base.nocoDbTool",
       "typeVersion": 3,
       "position": [
-        2396,
-        800
+        2368,
+        512
       ],
-      "id": "9e71fc07-cabf-41e4-a002-2ddfb5149644",
+      "id": "870dafc1-9a6e-4564-b426-52c9fc0c6810",
       "name": "Subscriber_dataset",
       "credentials": {
         "nocoDbApiToken": {
-          "id": "vMmmjNgfCj73BipF",
+          "id": "mLHxHHHMdJOGg94m",
           "name": "NocoDB Token account"
         }
       }
@@ -94,28 +76,11 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        20,
-        580
+        -80,
+        144
       ],
-      "id": "4dfc2ff9-d92a-4099-bcc5-b8933363fb04",
+      "id": "de546821-5560-4c30-875a-7a2164262963",
       "name": "When clicking ‘Execute workflow’"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.list }}",
-        "options": {
-          "systemMessage": "=You are a senior data analyst and business intelligence expert conducting a strategic brainstorming session. Your role is to analyze the databases and identify the most valuable business insights that would drive executive decision-making.\n\nKey responsibilities:\n- Think like a CMO, VP of Marketing, or Growth Director\n- Focus on actionable insights that drive revenue and optimize marketing spend\n- Consider data relationships, trends, and performance patterns\n- Generate questions that reveal growth opportunities, operational gaps, and strategic advantages\n- Prioritize insights that can influence budget allocation, campaign optimization, and customer acquisition strategies\n\nAnalysis approach:\n- Examine table structures and relationships to understand the business model\n- Identify key performance indicators and success metrics\n- Look for patterns in campaign performance, subscriber behavior, and conversion funnels\n- Consider seasonal trends, platform effectiveness, and audience segmentation opportunities\n- Focus on ROI, customer lifetime value, and acquisition cost optimization\n\nThe columns of the database are:{{ $json.list }}. The connection relationship between is these two tables share the same CampaignID.\n\n--Please using json format {[{\"questions\":\"question1\"}, {\"questions\":\"question2\"}, ...}] withou markdown format to give the top 4 questions that you are most interested about."
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2,
-      "position": [
-        1340,
-        580
-      ],
-      "id": "b65139a2-4fad-4a48-90e3-0d308ff52b7a",
-      "name": "AI Agent1"
     },
     {
       "parameters": {
@@ -127,14 +92,14 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        240,
-        580
+        144,
+        288
       ],
-      "id": "d59bcf70-774a-4a19-a59d-41b70a5df2e4",
+      "id": "be00cbf9-d464-4828-8b47-818db295e0d3",
       "name": "Get Tables",
       "credentials": {
         "nocoDbApiToken": {
-          "id": "vMmmjNgfCj73BipF",
+          "id": "mLHxHHHMdJOGg94m",
           "name": "NocoDB Token account"
         }
       }
@@ -147,28 +112,27 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        460,
-        580
+        368,
+        288
       ],
-      "id": "7470279c-513d-4f04-80f9-e6d0572c4fd8",
+      "id": "d0393f85-10c9-45bf-93f8-72e4c8a941bf",
       "name": "Split Out"
     },
     {
       "parameters": {
-        "modelName": "models/gemini-2.5-flash",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        1428,
-        800
+        1360,
+        512
       ],
-      "id": "9a23bde0-e1a3-4f3b-bc46-2ec27c69a1cc",
+      "id": "90709e79-8525-453a-96bc-e59334a2c0b6",
       "name": "Google Gemini Chat Model1",
       "credentials": {
         "googlePalmApi": {
-          "id": "dRUQ9ancGko63wY0",
+          "id": "ufXZ3L8KyTKcxPbd",
           "name": "Google Gemini(PaLM) Api account"
         }
       },
@@ -188,17 +152,163 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        680,
-        580
+        592,
+        288
       ],
-      "id": "ea483eb7-b360-412f-8e9b-dfc1a1f4adc5",
+      "id": "12da8f6c-af54-43d9-852b-8eab479e86fb",
       "name": "HTTP Request1",
       "credentials": {
         "nocoDbApiToken": {
-          "id": "vMmmjNgfCj73BipF",
+          "id": "mLHxHHHMdJOGg94m",
           "name": "NocoDB Token account"
         }
       }
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "list"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        288
+      ],
+      "id": "b1fc7d4d-ec6a-48d3-b70d-9ee5ebba0e64",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4cf26b61-64c3-4dc4-a97f-97daf671e2a2",
+              "name": "question_analysis",
+              "value": "={{ JSON.stringify($json.output.replace(/^```json\\n|```$/g, \"\").parseJson().question_analysis)}}",
+              "type": "string"
+            },
+            {
+              "id": "8b558de7-2368-4bea-8919-27523f5cd629",
+              "name": "visual",
+              "value": "={{ JSON.stringify($json.output.replace(/^```json\\n|```$/g, \"\").parseJson().chart_specification) }}",
+              "type": "string"
+            },
+            {
+              "id": "3e87e9dc-0ead-48f8-8a52-ff22b5aef7b8",
+              "name": "description",
+              "value": "={{ JSON.stringify($json.output.replace(/^```json\\n|```$/g, \"\").parseJson().chart_description) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4800,
+        288
+      ],
+      "id": "0144c900-4c7d-4b53-9b60-3bffaa0e8cf3",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "question",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1888,
+        288
+      ],
+      "id": "8fd142f6-ab3e-415b-b64d-35ff7b80f4f2",
+      "name": "Questions Split Out"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "markdownText",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        5248,
+        144
+      ],
+      "id": "01a908e7-8b8e-4247-804a-828b7debaf05",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{DateTime.now()}}.md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        5472,
+        144
+      ],
+      "id": "2d07e3ef-228e-4820-9dad-a3814a05c8f2",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "content": "## Question Generation",
+        "height": 580,
+        "width": 1880
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        128,
+        80
+      ],
+      "id": "9a0c9448-c05d-4e92-bec0-e124129cb774",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Question Analysis",
+        "height": 580,
+        "width": 920,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2032,
+        64
+      ],
+      "id": "b6dcb7da-1d54-4e13-a433-f02e01fa3e1e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Document Process",
+        "height": 500,
+        "width": 1132,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4480,
+        16
+      ],
+      "id": "577f9c54-21e4-4436-a306-001d04599ce7",
+      "name": "Sticky Note2"
     },
     {
       "parameters": {
@@ -217,31 +327,443 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        900,
-        580
+        816,
+        288
       ],
-      "id": "7e1cc38c-5ca8-4280-8df6-af6dd504c980",
-      "name": "Edit Fields2"
+      "id": "afca631f-597b-4c98-9efb-d0452fc19915",
+      "name": "Extract column names"
     },
     {
       "parameters": {
-        "fieldsToAggregate": {
-          "fieldToAggregate": [
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
             {
-              "fieldToAggregate": "list"
+              "id": "9e0f0950-480b-4f85-9437-20a261adf5f4",
+              "leftValue": "={{ JSON.stringify($json.output.replace(/^```json\\n|```$/g, \"\").parseJson().question_analysis.confidence_level)}}",
+              "rightValue": "\"high\"",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
-          ]
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2800,
+        288
+      ],
+      "id": "a8296bd5-e50b-4d35-888e-ee26c7b446a3",
+      "name": "If",
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.list }}",
+        "options": {
+          "systemMessage": "=You are a senior data analyst and business intelligence expert conducting a strategic brainstorming session. Your role is to analyze the databases and identify the most valuable business insights that would drive executive decision-making.\n\nKey responsibilities:\n- Think like a CMO, VP of Marketing, or Growth Director\n- Focus on actionable insights that drive revenue and optimize marketing spend\n- Consider data relationships, trends, and performance patterns\n- Generate questions that reveal growth opportunities, operational gaps, and strategic advantages\n- Prioritize insights that can influence budget allocation, campaign optimization, and customer acquisition strategies\n\nAnalysis approach:\n- Examine table structures and relationships to understand the business model\n- Identify key performance indicators and success metrics\n- Look for patterns in campaign performance, subscriber behavior, and conversion funnels\n- Consider seasonal trends, platform effectiveness, and audience segmentation opportunities\n- Focus on ROI, customer lifetime value, and acquisition cost optimization\n- No additional information needed for answering these questions\n\nThe columns of the database are:{{ $json.list }}. The connection relationship between is these two tables share the same CampaignID.\n\n--Please using json format {[{\"questions\":\"question1\"}, {\"questions\":\"question2\"}, ...}] withou markdown format to give the top 3 questions that you are most interested about."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1264,
+        288
+      ],
+      "id": "6c95731f-36f9-4715-9ce2-a1d43c7380d3",
+      "name": "Brainstorming - Questions Genration"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        3056,
+        608
+      ],
+      "id": "c48e15b9-7140-461d-96a7-490f1850e275",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ufXZ3L8KyTKcxPbd",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2576,
+        288
+      ],
+      "id": "51890e78-f402-4d5d-9f96-529ee2629b4f",
+      "name": "Wait",
+      "webhookId": "250a8eed-0e60-4b09-90ec-4097fcb1e373"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        3424,
+        608
+      ],
+      "id": "a77ff08b-77d8-43cd-87cf-1dbd4a216783",
+      "name": "Google Gemini Chat Model3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ufXZ3L8KyTKcxPbd",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "nocoDbApiToken",
+        "operation": "getAll",
+        "workspaceId": "wovbwxiy",
+        "projectId": "pxioc6gzz9sb7ar",
+        "table": "mb1fseo2t0w56u2",
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.nocoDbTool",
+      "typeVersion": 3,
+      "position": [
+        3552,
+        624
+      ],
+      "id": "4521e441-15bc-4243-989b-d10b3a211ff6",
+      "name": "Campaign_dataset1",
+      "credentials": {
+        "nocoDbApiToken": {
+          "id": "mLHxHHHMdJOGg94m",
+          "name": "NocoDB Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "nocoDbApiToken",
+        "operation": "getAll",
+        "workspaceId": "wovbwxiy",
+        "projectId": "pxioc6gzz9sb7ar",
+        "table": "mvoa7pf6hil2m4t",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.nocoDbTool",
+      "typeVersion": 3,
+      "position": [
+        3680,
+        624
+      ],
+      "id": "1c0bacc4-7ae7-4dc7-96ab-11ac8ae77429",
+      "name": "Subscriber_dataset1",
+      "credentials": {
+        "nocoDbApiToken": {
+          "id": "mLHxHHHMdJOGg94m",
+          "name": "NocoDB Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9e0f0950-480b-4f85-9437-20a261adf5f4",
+              "leftValue": "={{ JSON.stringify($json.output.replace(/^```json\\n|```$/g, \"\").parseJson().question_analysis.confidence_level) }}",
+              "rightValue": "\"high\"",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.aggregate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4256,
+        608
+      ],
+      "id": "e115c2d9-0fc4-4c70-ad81-683c3e304a86",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        1120,
-        580
+        4256,
+        144
       ],
-      "id": "35507d32-31ca-4333-b969-ca8ed40538ef",
-      "name": "Aggregate"
+      "id": "cc57eed2-87a5-40bc-be18-91fe16ed782a",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4576,
+        288
+      ],
+      "id": "873d2175-979e-4052-8059-bc7f3be74d28",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "content": "## Deal with analysis with low confidence levels",
+        "height": 784,
+        "width": 1440
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3008,
+        0
+      ],
+      "id": "6cf455ed-4b63-45b4-a8f1-c91357cebad4",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        3728,
+        -288
+      ],
+      "id": "67984738-f976-4ffb-8214-05c279abd33f",
+      "name": "Google Gemini Chat Model4",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ufXZ3L8KyTKcxPbd",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "nocoDbApiToken",
+        "operation": "getAll",
+        "workspaceId": "wovbwxiy",
+        "projectId": "pxioc6gzz9sb7ar",
+        "table": "mb1fseo2t0w56u2",
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.nocoDbTool",
+      "typeVersion": 3,
+      "position": [
+        3856,
+        -288
+      ],
+      "id": "602c96c2-1464-4dc9-be73-60bf7028b1f0",
+      "name": "Campaign_dataset2",
+      "credentials": {
+        "nocoDbApiToken": {
+          "id": "mLHxHHHMdJOGg94m",
+          "name": "NocoDB Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "nocoDbApiToken",
+        "operation": "getAll",
+        "workspaceId": "wovbwxiy",
+        "projectId": "pxioc6gzz9sb7ar",
+        "table": "mvoa7pf6hil2m4t",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.nocoDbTool",
+      "typeVersion": 3,
+      "position": [
+        3984,
+        -288
+      ],
+      "id": "32632394-6094-4120-b643-613323e0c19e",
+      "name": "Subscriber_dataset2",
+      "credentials": {
+        "nocoDbApiToken": {
+          "id": "mLHxHHHMdJOGg94m",
+          "name": "NocoDB Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior marketing data analyst with expertise in campaign performance analysis. Your task is to analyse marketing data and answer specific strategic questions. The question is {{ $json.question }}.\n\nCAPABILITIES:\n\n- Analyse campaign performance data (budgets, conversions, platforms, dates)\n\n- Calculate key marketing metrics (ROI, CPA, conversion rates, etc.)\n\n- Identify trends, patterns, and insights\n\n- Generate data for visualisations\n\n- Provide actionable recommendations\n\nANALYSIS FRAMEWORK:\n\n1. Understand the question context and what data is needed\n\n2. Examine the provided datasets thoroughly\n\n3. Calculate relevant metrics\n\n4. Identify key insights and patterns\n\n5. Suggest appropriate visualisations\n\n6. Provide actionable recommendations\n\nOUTPUT REQUIREMENTS:\n\nYou must return a JSON response with this exact structure, and the question_analysis would be converted to HTML in the next stage, so use markdown format in the analysis contents:\n\n{\n\n\"question_analysis\": {\n\n\"question\": \"The original question being analysed.\",\n\n\"data_summary\": \"Two datasets were analysed.\",\n\n\"key_metrics\": \"Values and explanations.\",\n\n\"insights\": [\n\n\"Key insight 1 with supporting data.\",\n\n\"Key insight 2 with supporting data.\"\n\n],\n\n\"recommendations\": \"Specific actionable recommendation.\",\n\n\"confidence_level\": \"high\",\n\n\"data_quality_notes\": \"Any limitations or data quality issues.\"\n\n},\n\n\"chart_specification\": {\n\n\"type\": \"bar\",\n\n\"data\": {\n\n\"labels\": [\"Q1\", \"Q2\", \"Q3\", \"Q4\"],\n\n\"datasets\": [\n\n{\n\n\"label\": \"Users\",\n\n\"data\": [50, 60, 70, 180]\n\n}\n\n]\n\n},\n\n\"options\": {\n\n\"responsive\": true,\n\n\"plugins\": {\n\n\"title\": {\n\n\"display\": true,\n\n\"text\": \"Chart Title\"\n\n}\n\n}\n\n}\n\n},\n\n\"chart_description\": \"What this chart shows and why it's relevant.\"\n\n}\n\n\n\nCHART OPTIMIZATION RULES:\n\n- Keep labels concise (max 15 characters each) - use abbreviations like \"FB-Teens\", \"IG-Adults\", \"YT-Fam\"\n\n- Limit datasets to a maximum of 3 for readability\n\n- For dual-metric charts, prefer separate charts or normalised data\n\n- Use simple colour schemes - avoid complex styling\n\n- Keep total chart configuration under 1500 characters when JSON stringified\n\n- Prioritise clarity over complexity\n\n- If data has >10 categories, group smaller ones into \"Others\"\n\n- Use round numbers where appropriate (avoid excessive decimals)\n\n\n\nIMPORTANT RULES:\n\n- Use British English (Visulise rather than Visulize).\n\n- Base analysis only on the actual data provided\n\n- Calculate metrics accurately using the available data\n\n- Use markdown format for tables in the Key Metrics part, be careful about the table structure, such as avoiding using \".\" or \"$\" sign in tables, if you want to, use \"\\.\" or \"\\$\" instead, and do not put a New line signal after abbreviations, etc.\n\n- Suggest visualisations that best represent the insights\n\n- Provide specific, actionable recommendations\n\n- Indicate confidence level based on data quality and completeness\n\n- The markdown content should be nested into JSON format variables. **Do not include any text before or after the JSON object.** The output must be a single, valid JSON object.\n\n- Ensure chart configurations are QuickChart-compatible and URL-safe",
+        "options": {
+          "systemMessage": "="
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        2144,
+        288
+      ],
+      "id": "d299beb7-3ced-459e-bbea-d06ffb44ecd8",
+      "name": "AI Question Analysis"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior data analyst and business intelligence expert conducting a strategic brainstorming session. Your role is to analyse the databases and identify the most valuable business insights that would drive executive decision-making.\n\nKey responsibilities:\n- Think like a CMO, VP of Marketing, or Growth Director\n- Focus on actionable insights that drive revenue and optimize marketing spend\n- Consider data relationships, trends, and performance patterns\n- Generate questions that reveal growth opportunities, operational gaps, and strategic advantages\n- Prioritise insights that can influence budget allocation, campaign optimization, and customer acquisition strategies\n\nAnalysis approach:\n- Examine table structures and relationships to understand the business model\n- Identify key performance indicators and success metrics\n- Look for patterns in campaign performance, subscriber behavior, and conversion funnels\n- Consider seasonal trends, platform effectiveness, and audience segmentation opportunities\n- Focus on ROI, customer lifetime value, and acquisition cost optimization\n\nThe columns of the database are:{{ $('Aggregate').item.json.list }}. The connection relationship between is these two tables share the same CampaignID.\n\n--Please using json format {\"questions\":\"question content\"} withou markdown format to give {{ $item.length }} question(s) that you are most interested about.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        3024,
+        416
+      ],
+      "id": "247e77f0-047e-4dcc-b9fa-56a2efb39191",
+      "name": "New Question Generation"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are a senior marketing data analyst with expertise in campaign performance analysis. Your task is to analyze marketing data and answer specific strategic questions. The questions is {{ $json.output }}.\n\nCAPABILITIES:\n- Analyze campaign performance data (budgets, conversions, platforms, dates)\n- Calculate key marketing metrics (ROI, CPA, conversion rates, etc.)\n- Identify trends, patterns, and insights\n- Generate data for visualizations\n- Provide actionable recommendations\n\nANALYSIS FRAMEWORK:\n1. Understand the question context and what data is needed\n2. Examine the provided datasets thoroughly\n3. Calculate relevant metrics\n4. Identify key insights and patterns\n5. Suggest appropriate visualizations\n6. Provide actionable recommendations\n\nOUTPUT REQUIREMENTS:\nYou must return a JSON response with this exact structure, and the question_analysis would be converted to html in the next stage, so, but use markdown format in analysis contents:\n{\n  \"question_analysis\": {\n    \"question\": \"The original question being analyzed.\",\n    \"data_summary\": \"Two datasets were analyzed.\",\n    \"key_metrics\": \"Values and explanations.\",\n    \"insights\": [\n      \"Key insight 1 with supporting data.\",\n      \"Key insight 2 with supporting data.\"\n    ],\n    \"recommendations\": \"Specific actionable recommendation.\",\n    \"confidence_level\": \"high\",\n    \"data_quality_notes\": \"Any limitations or data quality issues.\"\n  },\n  \"chart_specification\": {\n    \"type\": \"bar\",\n    \"data\": {\n      \"labels\": [\"Q1\", \"Q2\", \"Q3\", \"Q4\"],\n      \"datasets\": [\n        {\n          \"label\": \"Users\",\n          \"data\": [50, 60, 70, 180]\n        }\n      ]\n    },\n    \"options\": {\n      \"responsive\": true,\n      \"plugins\": {\n        \"title\": {\n          \"display\": true,\n          \"text\": \"Chart Title\"\n        }\n      }\n    }\n  },\n  \"chart_description\": \"What this chart shows and why it's relevant.\"\n}\n\nCHART OPTIMIZATION RULES:\n- Keep labels concise (max 15 characters each) - use abbreviations like \"FB-Teens\", \"IG-Adults\", \"YT-Fam\"\n- Limit datasets to maximum 3 for readability\n- For dual-metric charts, prefer separate charts or normalized data\n- Use simple color schemes - avoid complex styling\n- Keep total chart configuration under 1500 characters when JSON stringified\n- Prioritize clarity over complexity\n- If data has >10 categories, group smaller ones into \"Others\"\n- Use round numbers where appropriate (avoid excessive decimals)\n\nIMPORTANT RULES:\n- Use British English (Visulise rather than Visulize).\n- Base analysis only on the actual data provided\n- Calculate metrics accurately using the available data\n- Use markdown format for tables in the Key Metrics part, be careful about the table structure, such as avoiding using \".\" or \"$\" sign in tables, if you want to, use \"\\.\" or \"\\$\" instead, and do not put a New line signal after abbreviations, etc.\n- Suggest visualizations that best represent the insights\n- Provide specific, actionable recommendations\n- Indicate confidence level based on data quality and completeness\n- Return only valid JSON format, avoiding double quotes issues\n- Ensure chart configurations are QuickChart-compatible and URL-safe"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        3456,
+        416
+      ],
+      "id": "8a4722e7-f48e-4559-a922-bb7232ff4b85",
+      "name": "Question Analysis"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior marketing data analyst specialising in creating comprehensive dashboard reports. Your task is to analyse marketing data from the provided databases (Campaign_dataset and Subscriber_dataset) and generate a full dashboard report in a single, well-structured JSON object. The report must contain an analysis of key performance indicators (KPIs) and include all necessary data for visualisation.\n\n\n\nCAPABILITIES:\n\n- Analyse campaign performance data (budgets, conversions, platforms, dates)\n\n- Calculate key marketing metrics (e.g., ROI, CPA, conversion rates)\n\n- Identify trends, patterns, and insights across different campaigns and platforms\n\n- Generate data for visualisations that clearly illustrate trends and performance\n\n- Provide actionable recommendations based on the analysis\n\n\n\nANALYSIS FRAMEWORK:\n\n1. Examine the provided datasets thoroughly to understand their structure and relationships.\n\n2. Calculate a range of relevant KPIs, such as total spend, total conversions, ROI, and CPA.\n\n3. Identify top-performing campaigns, platforms, or time periods.\n\n4. Suggest a set of visualisations that best represent these KPIs and trends.\n\n5. Provide actionable recommendations to optimise campaign performance.\n\n\n\nOUTPUT REQUIREMENTS:\n\nYou must return a single JSON response with the following exact structure. This structure is designed to be a complete dashboard report.\n\n\n\n{\n\n  \"report_title\": \"Marketing Campaign Performance Dashboard\",\n\n  \"introduction\": \"An executive summary of the report's purpose and key findings.\",\n\n  \"sections\": [\n\n    {\n\n      \"section_title\": \"Overall Performance Summary\",\n\n      \"analysis\": \"A high-level overview of total campaign performance. Use markdown for formatting tables or lists within the text.\",\n\n      \"key_metrics\": {\n\n        \"total_spend\": \"Calculated value\",\n\n        \"total_conversions\": \"Calculated value\",\n\n        \"average_roi\": \"Calculated value\",\n\n        \"average_cpa\": \"Calculated value\"\n\n      }\n\n    },\n\n    {\n\n      \"section_title\": \"Campaign & Platform Analysis\",\n\n      \"analysis\": \"Detailed breakdown of performance by platform and individual campaign. Identify top and bottom performers.\",\n\n      \"key_insights\": [\n\n        \"Insight 1 with supporting data.\",\n\n        \"Insight 2 with supporting data.\"\n\n      ],\n\n      \"chart_description\": \"What this chart shows and why it's relevant.\",\n\n      \"chart_specification\": {\n\n        \"type\": \"bar\",\n\n        \"data\": {\n\n          \"labels\": [\"Campaign A\", \"Campaign B\", \"Campaign C\"],\n\n          \"datasets\": [\n\n            {\n\n              \"label\": \"ROI\",\n\n              \"data\": [1.5, 2.3, 0.9]\n\n            }\n\n          ]\n\n        },\n\n        \"options\": {}\n\n      }\n\n    },\n\n    {\n\n      \"section_title\": \"Conversion Trend Analysis\",\n\n      \"analysis\": \"Analysis of conversion trends over time.\",\n\n      \"key_insights\": [\n\n        \"Insight 1 with supporting data.\",\n\n        \"Insight 2 with supporting data.\"\n\n      ],\n\n      \"chart_description\": \"What this chart shows and why it's relevant.\",\n\n      \"chart_specification\": {\n\n        \"type\": \"line\",\n\n        \"data\": {\n\n          \"labels\": [\"Jan\", \"Feb\", \"Mar\"],\n\n          \"datasets\": [\n\n            {\n\n              \"label\": \"Conversions\",\n\n              \"data\": [1000, 1200, 1500]\n\n            }\n\n          ]\n\n        },\n\n        \"options\": {}\n\n      }\n\n    }\n\n  ],\n\n  \"recommendations\": \"Specific, actionable recommendations to improve future campaign performance.\",\n\n  \"confidence_level\": \"high\",\n\n  \"data_quality_notes\": \"Any limitations or data quality issues encountered during analysis.\"\n\n}\n\n\n\nCHART OPTIMIZATION RULES:\n\n- Keep labels concise (max 15 characters each) - use abbreviations like \"FB-Teens\", \"IG-Adults\", \"YT-Fam\".\n\n- Limit datasets to a maximum of 3 for readability.\n\n- For dual-metric charts, prefer separate charts or normalised data.\n\n- Use simple colour schemes - avoid complex styling.\n\n- Keep total chart configuration under 1500 characters when JSON stringified.\n\n- Prioritise clarity over complexity.\n\n- If data has >10 categories, group smaller ones into \"Others\".\n\n- Use round numbers where appropriate (avoid excessive decimals).\n\n\n\nIMPORTANT RULES:\n\n- Use British English (Visulisation rather than Visulization).\n\n- Base analysis only on the actual data provided by the tools.\n\n- Pay close attention to the \"$\" sign to avoid markdown file transformation. If you want to use the \"$\" sign in the content rather than formatting, use \"\\$\" instead.\n\n- Calculate metrics accurately using the available data.\n\n- Use markdown format for tables in the analysis text.\n\n- Suggest visualisations that best represent the insights.\n\n- Provide specific, actionable recommendations.\n\n- Indicate confidence level based on data quality and completeness.\n\n- Return ONLY valid JSON format. Ensure no double quote issues and DO NOT include \"```json\\n\" at the beginning.\n\n- Ensure all chart configurations are QuickChart-compatible and URL-safe.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        3760,
+        -512
+      ],
+      "id": "25261ae6-0a24-4164-ab8a-1f0640f46181",
+      "name": "Dashboard Reporting"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process all input items and combine into single markdown document\nconst allItems = $input.all();\nconst markdownSections = Array();\n\nallItems.forEach((item, index) => {\n  try {\n    const visual = item.json.visual;\n    const description = item.json.description;\n    \n    // Parse JSON string to object\n    const data = JSON.parse(item.json.question_analysis);\n    \n    // Encode visual JSON for URL (must be URL-safe!)\n    const encodedVisual = encodeURIComponent(visual);\n    const image = `https://quickchart.io/chart?c=${encodedVisual}`;\n    \n    // Create section header\n    const sectionHeader = `## Part ${index + 1}`;\n    \n    // Convert each key-value into properly formatted Markdown\n    const analysisContent = Object.entries(data).map(([field, value]) => {\n      const title = field\n        .replace(/_/g, ' ')\n        .replace(/\\b\\w/g, letter => letter.toUpperCase());\n      \n      // Format different types of content appropriately\n      let formattedValue = value;\n      \n      // Handle arrays (like insights)\n      if (Array.isArray(value)) {\n        formattedValue = value.map(item => `- ${item}`).join('\\n');\n      }\n      // Handle objects or complex structures\n      else if (typeof value === 'object' && value !== null) {\n        formattedValue = JSON.stringify(value, null, 2);\n      }\n      // Handle long text content\n      else if (typeof value === 'string' && value.length > 200) {\n        // Break long paragraphs into readable chunks\n        formattedValue = value.replace(/\\.\\s+/g, '.\\n\\n');\n      }\n      \n      return `### ${title}\\n\\n${formattedValue}`;\n    }).join('\\n\\n');\n    \n    // Create chart section\n    const chartSection = `### Visualisation\\n\\n![Chart](${image})`;\n    \n    // Create description section\n    const descriptionSection = `### Chart Description\\n\\n${description}`;\n    \n    // Combine all parts for this item\n    const itemMarkdown = [\n      sectionHeader,\n      analysisContent,\n      chartSection,\n      descriptionSection,\n      '---' // Section separator\n    ].join('\\n\\n');\n    \n    markdownSections.push(itemMarkdown);\n    \n  } catch (error) {\n    // Handle parsing errors gracefully\n    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';\n    markdownSections.push(`# Analysis Report ${index + 1} - Error\\n\\nFailed to process item: ${errorMessage}\\n\\n---`);\n  }\n});\n\n// Combine all sections with proper document structure\nconst documentTitle = `# Data Analysis Report\\n\\n`;\n// Create table of contents with actual question details\nconst tableOfContents = `## Table of Contents\\n\\n${allItems.map((item, index) => {\n  try {\n    const data = JSON.parse(item.json.question_analysis);\n    const question = data.question || `Analysis Report ${index + 1}`;\n    // Truncate long questions for TOC readability\n    const shortQuestion = question.length > 100 ? question.substring(0, 100) + '...' : question;\n    return `${index + 1}. [${shortQuestion}](#analysis-report-${index + 1})`;\n  } catch (error) {\n    return `${index + 1}. [Analysis Report ${index + 1} - Error](#analysis-report-${index + 1})`;\n  }\n}).join('\\n')}\\n\\n---\\n\\n`;\n\n// Create the final document array\nconst fullDocumentArray = [\n  documentTitle,\n  tableOfContents,\n  markdownSections.join('\\n\\n')\n];\n\n// Add the first part of the report if it exists\nif ($('Dashboard Report Compilation').first().json.markdown_report) {\n  fullDocumentArray.unshift($('Dashboard Report Compilation').first().json.markdown_report, '\\n');\n}\n\nconst fullDocument = fullDocumentArray.join('');\n\nreturn [\n  {\n    json: {\n      markdownText: fullDocument,\n      totalSections: allItems.length,\n      fileName: new Date().toISOString()\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5024,
+        144
+      ],
+      "id": "d5a7d804-8bdd-4e16-a0ab-ab0a21e0c77e",
+      "name": "Markdown File Generation"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "markdown_report",
+        "binaryPropertyName": "data1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        4416,
+        -400
+      ],
+      "id": "87f5eed5-6432-4ec6-9a07-516c46587090",
+      "name": "Dashboard file"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        3904,
+        416
+      ],
+      "id": "1865ef04-860c-424c-83cd-c751d81ec5dc",
+      "name": "Split Out2"
+    },
+    {
+      "parameters": {
+        "content": "## Reporting Dashboard Generation",
+        "height": 576,
+        "width": 1248,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3408,
+        -656
+      ],
+      "typeVersion": 1,
+      "id": "d63986e5-7721-4348-99d9-92aba0ace16d",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// The JSON content is passed as a string from the input.\nconst inputJsonString = $input.first().json.output;\n\ntry {\n  // Remove the markdown code block fences and parse the JSON string into an object.\n  const sanitizedJsonString = inputJsonString.replace(/^```json\\n|```$/g, \"\");\n  const dashboardData = JSON.parse(sanitizedJsonString);\n\n  /**\n   * Transforms a JSON dashboard report object into a Markdown-formatted string.\n   * @param {object} dashboardData - The dashboard report object.\n   * @returns {string} The Markdown-formatted string.\n   */\n  function jsonToMarkdown(dashboardData) {\n    let markdown = `# ${dashboardData.report_title}\\n\\n`;\n    markdown += `${dashboardData.introduction}\\n\\n`;\n\n    // Add data quality notes and confidence level at the beginning\n    markdown += `### Report Details\\n\\n`;\n    markdown += `- **Generated Time:** ${new Date().toISOString().replace('T', ' ').split('.')[0]}\\n`;\n    markdown += `- **Confidence Level:** ${dashboardData.confidence_level}\\n`;\n    markdown += `- **Data Quality Notes:** ${dashboardData.data_quality_notes}\\n\\n`;\n    markdown += `---\\n\\n`;\n\n    // Process sections\n    dashboardData.sections.forEach(section => {\n      markdown += `## ${section.section_title}\\n\\n`;\n      if (section.analysis) {\n        markdown += `${section.analysis}\\n\\n`;\n      }\n\n      // Include key metrics if available\n      if (section.key_metrics) {\n        markdown += `### Key Metrics\\n\\n`;\n        for (const [key, value] of Object.entries(section.key_metrics)) {\n          const formattedKey = key.replace(/_/g, ' ').replace(/\\b\\w/g, c => c.toUpperCase());\n          markdown += `- **${formattedKey}:** ${value}\\n`;\n        }\n        markdown += `\\n`;\n      }\n\n      // Include key insights if available\n      if (section.key_insights && section.key_insights.length > 0) {\n        markdown += `### Key Insights\\n\\n`;\n        section.key_insights.forEach(insight => {\n          markdown += `- ${insight}\\n`;\n        });\n        markdown += `\\n`;\n      }\n\n      // Process chart if available\n      if (section.chart_specification) {\n        markdown += `### Visualization\\n\\n`;\n        markdown += `${section.chart_description}\\n\\n`;\n        const encodedChart = encodeURIComponent(JSON.stringify(section.chart_specification));\n        const chartUrl = `https://quickchart.io/chart?c=${encodedChart}`;\n        markdown += `![${section.section_title} Chart](${chartUrl})\\n\\n`;\n      }\n      \n      markdown += `---\\n\\n`;\n    });\n\n    // Process recommendations\n    if (dashboardData.recommendations) {\n      markdown += `## Actionable Recommendations\\n\\n`;\n      if (Array.isArray(dashboardData.recommendations)) {\n        dashboardData.recommendations.forEach((recommendation, index) => {\n          markdown += `${index + 1}. ${recommendation}\\n`;\n        });\n      } else {\n        markdown += `${dashboardData.recommendations}\\n`;\n      }\n      markdown += `\\n`;\n    }\n    \n    return markdown;\n  }\n\n  // Call the function with the correctly parsed object\n  const markdownOutput = jsonToMarkdown(dashboardData);\n\n  // Return an array of objects as required by n8n\n  return [{\n    markdown_report: markdownOutput\n  }];\n\n} catch (error) {\n  // If parsing fails, return an error message in the expected format\n  return [{\n    error: `Failed to parse JSON input. Error: ${error.message}`\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4192,
+        -400
+      ],
+      "id": "78ce2171-70ab-4379-b1f0-2b0eec5d7527",
+      "name": "Dashboard Report Compilation"
     },
     {
       "parameters": {
@@ -250,183 +772,52 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1716,
-        580
+        1664,
+        288
       ],
-      "id": "f7c1ed5e-3a61-4563-99c7-b05774fb8d59",
-      "name": "Code"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "4cf26b61-64c3-4dc4-a97f-97daf671e2a2",
-              "name": "question_analysis",
-              "value": "={{ $json.output.replace(/^```json\\n|```$/g, \"\").parseJson().question_analysis}}",
-              "type": "string"
-            },
-            {
-              "id": "8b558de7-2368-4bea-8919-27523f5cd629",
-              "name": "visual",
-              "value": "={{ $json.output.replace(/^```json\\n|```$/g, \"\").parseJson().chart_specification }}",
-              "type": "string"
-            },
-            {
-              "id": "3e87e9dc-0ead-48f8-8a52-ff22b5aef7b8",
-              "name": "description",
-              "value": "={{ $json.output.replace(/^```json\\n|```$/g, \"\").parseJson().chart_description }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        2816,
-        580
-      ],
-      "id": "31da0d5c-bfa4-4e76-ade0-e2d1c4b7668a",
-      "name": "Edit Fields"
-    },
-    {
-      "parameters": {
-        "fieldToSplitOut": "question",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.splitOut",
-      "typeVersion": 1,
-      "position": [
-        1936,
-        580
-      ],
-      "id": "d4e7df95-5a9d-4915-9a13-753a20946065",
-      "name": "Questions Split Out"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1.1,
-      "position": [
-        2596,
-        580
-      ],
-      "id": "7c9b3bbe-5cd1-4179-8ed9-2caff5fd94d6",
-      "name": "Wait",
-      "webhookId": "41bf7fe4-ae2a-4f47-b05e-5815f0332c96"
-    },
-    {
-      "parameters": {
-        "operation": "toText",
-        "sourceProperty": "markdownText",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.convertToFile",
-      "typeVersion": 1.1,
-      "position": [
-        3256,
-        580
-      ],
-      "id": "908a953d-d2d6-457a-950f-ea9bc55adab0",
-      "name": "Convert to File"
-    },
-    {
-      "parameters": {
-        "operation": "write",
-        "fileName": "={{DateTime.now()}}.md",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        3476,
-        580
-      ],
-      "id": "80700112-42fb-42d2-9e68-a8373193a8bb",
-      "name": "Read/Write Files from Disk"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Process all input items and combine into single markdown document\nconst allItems = $input.all();\nconst markdownSections = Array();\n\nallItems.forEach((item, index) => {\n  try {\n    const visual = item.json.visual;\n    const description = item.json.description;\n    \n    // Parse JSON string to object\n    const data = JSON.parse(item.json.question_analysis);\n    \n    // Encode visual JSON for URL (must be URL-safe!)\n    const encodedVisual = encodeURIComponent(visual);\n    const image = `https://quickchart.io/chart?c=${encodedVisual}`;\n    \n    // Create section header\n    const sectionHeader = `# Part ${index + 1}`;\n    \n    // Convert each key-value into properly formatted Markdown\n    const analysisContent = Object.entries(data).map(([field, value]) => {\n      const title = field\n        .replace(/_/g, ' ')\n        .replace(/\\b\\w/g, letter => letter.toUpperCase());\n      \n      // Format different types of content appropriately\n      let formattedValue = value;\n      \n      // Handle arrays (like insights)\n      if (Array.isArray(value)) {\n        formattedValue = value.map(item => `- ${item}`).join('\\n');\n      }\n      // Handle objects or complex structures\n      else if (typeof value === 'object' && value !== null) {\n        formattedValue = JSON.stringify(value, null, 2);\n      }\n      // Handle long text content\n      else if (typeof value === 'string' && value.length > 200) {\n        // Break long paragraphs into readable chunks\n        formattedValue = value.replace(/\\.\\s+/g, '.\\n\\n');\n      }\n      \n      return `## ${title}\\n\\n${formattedValue}`;\n    }).join('\\n\\n');\n    \n    // Create chart section\n    const chartSection = `## Visualization\\n\\n![Chart](${image})`;\n    \n    // Create description section\n    const descriptionSection = `## Chart Description\\n\\n${description}`;\n    \n    // Combine all parts for this item\n    const itemMarkdown = [\n      sectionHeader,\n      analysisContent,\n      chartSection,\n      descriptionSection,\n      '---' // Section separator\n    ].join('\\n\\n');\n    \n    markdownSections.push(itemMarkdown);\n    \n  } catch (error) {\n    // Handle parsing errors gracefully\n    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';\n    markdownSections.push(`# Analysis Report ${index + 1} - Error\\n\\nFailed to process item: ${errorMessage}\\n\\n---`);\n  }\n});\n\n// Combine all sections with proper document structure\nconst documentTitle = `# Data Analysis Report\\n\\n*Generated on ${new Date().toISOString().split('T')[0]}*\\n\\n`;\n// Create table of contents with actual question details\nconst tableOfContents = `## Table of Contents\\n\\n${allItems.map((item, index) => {\n  try {\n    const data = JSON.parse(item.json.question_analysis);\n    const question = data.question || `Analysis Report ${index + 1}`;\n    // Truncate long questions for TOC readability\n    const shortQuestion = question.length > 100 ? question.substring(0, 100) + '...' : question;\n    return `${index + 1}. [${shortQuestion}](#analysis-report-${index + 1})`;\n  } catch (error) {\n    return `${index + 1}. [Analysis Report ${index + 1} - Error](#analysis-report-${index + 1})`;\n  }\n}).join('\\n')}\\n\\n---\\n\\n`;\n\nconst fullDocument = [\n  documentTitle,\n  tableOfContents,\n  markdownSections.join('\\n\\n')\n].join('');\n\nreturn [\n  {\n    json: {\n      markdownText: fullDocument,\n      totalSections: allItems.length,\n      generatedAt: new Date().toISOString()\n    }\n  }\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3036,
-        580
-      ],
-      "id": "07356cb2-8bec-4237-a49e-963bff7cefe9",
-      "name": "Code2"
-    },
-    {
-      "parameters": {
-        "content": "## extract Dataset columns and use AI to generate questions",
-        "height": 580,
-        "width": 1880
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -40,
-        440
-      ],
-      "id": "abbca382-6625-408d-bca6-146ecf631f74",
-      "name": "Sticky Note"
-    },
-    {
-      "parameters": {
-        "content": "## Question Process",
-        "height": 580,
-        "width": 1080,
-        "color": 3
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        1900,
-        440
-      ],
-      "id": "4fa050f3-3362-464c-8314-63970b6bafa9",
-      "name": "Sticky Note1"
-    },
-    {
-      "parameters": {
-        "content": "## Document Process",
-        "height": 580,
-        "width": 700,
-        "color": 6
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        3020,
-        440
-      ],
-      "id": "479a4e36-b3ae-4631-b763-b5e8dd94627d",
-      "name": "Sticky Note2"
+      "id": "1ccab2d6-31a4-48dc-9e7f-9530bb1a5359",
+      "name": "Question Compilation"
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "Question Analysis": [
+      {
+        "json": {
+          "output": "```json\n{\n  \"question_analysis\": {\n    \"question\": \"Which combinations of `Platform`, `ContentType`, and `AudienceType` from our campaigns are most effective at acquiring subscribers who demonstrate the highest `EngagementRate` and `ViewingTime`, indicating superior Customer Lifetime Value potential, relative to their initial `Subscription Cost`?\",\n    \"data_summary\": \"Two datasets were analyzed: `Subscriber_dataset1` providing subscriber-level engagement and viewing time, and `Campaign_dataset1` detailing campaign specifics including platform, content type, audience type, and subscription cost. The datasets were merged on `CampaignID` to link subscriber behavior to campaign attributes.\",\n    \"key_metrics\": \"| Combination (Platform-ContentType-AudienceType) | Avg Engagement Rate | Avg Viewing Time | Avg Subscription Cost | Effectiveness Score |\\n|---|---|---|---|---|\\n| Blogs-Movie-Families | 3.25 | 2779.5 | 15.0 | 600.52 |\\n| Instagram-TV Show-Teens | 4.0 | 2582.0 | 15.0 | 688.53 |\\n| Instagram-Movie-Young Adults | 3.0 | 2568.5 | 15.0 | 513.7 |\\n| Instagram-Movie-Families | 3.0 | 2664.0 | 10.0 | 799.2 |\\n| YouTube-Movie-Young Adults | 4.0 | 2768.5 | 12.5 | 885.92 |\\n| YouTube-Documentary-Young Adults | 3.5 | 2900.5 | 15.0 | 676.78 |\\n| YouTube-TV Show-Adults | 3.0 | 2405.0 | 15.0 | 481.0 |\\n| YouTube-Documentary-Teens | 3.0 | 2843.5 | 10.0 | 853.05 |\\n| YouTube-TV Show-Families | 3.25 | 2633.5 | 12.5 | 684.71 |\\n| TikTok-Movie-Young Adults | 4.0 | 2715.0 | 15.0 | 724.0 |\\n| TikTok-TV Show-Families | 3.0 | 2786.0 | 10.0 | 835.8 |\\n| TikTok-Documentary-Young Adults | 4.0 | 2642.0 | 15.0 | 704.53 |\\n| TikTok-Movie-Adults | 3.0 | 2891.5 | 15.0 | 578.3 |\\n| Facebook-Documentary-Adults | 3.0 | 2688.0 | 10.0 | 806.4 |\\n| Facebook-Documentary-Young Adults | 3.0 | 2688.0 | 10.0 | 806.4 |\\n| Facebook-Movie-Teens | 3.0 | 2919.0 | 12.5 | 699.29 |\\n| Facebook-Movie-Adults | 3.0 | 2760.0 | 10.0 | 828.0 |\\n| Instagram-Movie-Teens | 3.0 | 2575.0 | 12.5 | 618.0 |\\n| Blogs-TV Show-Young Adults | 3.0 | 2623.5 | 15.0 | 524.7 |\\n| Blogs-Documentary-Teens | 3.0 | 2439.0 | 12.5 | 585.36 |\\n| Blogs-Movie-Teens | 3.0 | 2776.0 | 15.0 | 555.2 |\\n| Blogs-Movie-Adults | 3.0 | 2720.0 | 15.0 | 544.0 |\\n| Blogs-Documentary-Families | 3.0 | 2776.0 | 12.5 | 666.24 |\",\n    \"insights\": [\n      \"**1. Instagram-Movie-Families**: This combination demonstrates exceptional performance with an Effectiveness Score of 799.2. Subscribers acquired through this combination show an average engagement rate of 3.0 and average viewing time of 2664.0 minutes, all while maintaining an average subscription cost of 10.0.\",\n      \"**2. Facebook-Movie-Adults**: This combination demonstrates exceptional performance with an Effectiveness Score of 828.0. Subscribers acquired through this combination show an average engagement rate of 3.0 and average viewing time of 2760.0 minutes, all while maintaining an average subscription cost of 10.0.\",\n      \"**3. Facebook-Documentary-Adults**: This combination demonstrates exceptional performance with an Effectiveness Score of 806.4. Subscribers acquired through this combination show an average engagement rate of 3.0 and average viewing time of 2688.0 minutes, all while maintaining an average subscription cost of 10.0.\"\n    ],\n    \"recommendations\": \"Focus future campaign investments on combinations of Platform, ContentType, and AudienceType that yield high Effectiveness Scores. Specifically, explore strategies to replicate the success factors of the top-performing combinations, such as targeted content creation and audience segmentation. Investigate if the lower subscription cost in some high-performing combinations is a primary driver or if other factors contribute to the higher relative value.\",\n    \"confidence_level\": \"high\",\n    \"data_quality_notes\": \"The analysis relies on the accuracy and completeness of `EngagementRate`, `ViewingTime`, and `Subscription Cost` data in the provided datasets. The definition of 'Customer Lifetime Value potential' is approximated using the Effectiveness Score calculated from engagement, viewing time, and subscription cost.\"\n  },\n  \"chart_specification\": {\n    \"type\": \"bar\",\n    \"data\": {\n      \"labels\": [\n        \"Insta-Fam-Mov\",\n        \"Faceb-Adu-Mov\",\n        \"Faceb-Adu-Doc\"\n      ],\n      \"datasets\": [\n        {\n          \"label\": \"Effectiveness Score\",\n          \"data\": [\n            799.2,\n            828.0,\n            806.4\n          ],\n          \"backgroundColor\": \"rgba(75, 192, 192, 0.6)\"\n        }\n      ]\n    },\n    \"options\": {\n      \"indexAxis\": \"y\",\n      \"responsive\": true,\n      \"plugins\": {\n        \"title\": {\n          \"display\": true,\n          \"text\": \"Top 3 Combinations by Effectiveness Score\"\n        }\n      },\n      \"scales\": {\n        \"x\": {\n          \"beginAtZero\": true,\n          \"title\": {\n            \"display\": true,\n            \"text\": \"Effectiveness Score\"\n          }\n        },\n        \"y\": {\n          \"title\": {\n            \"display\": true,\n            \"text\": \"Combination\"\n          }\n        }\n      }\n    }\n  },\n  \"chart_description\": \"This bar chart illustrates the Effectiveness Score for the top 3 performing combinations of Platform, ContentType, and AudienceType. The Effectiveness Score is calculated as (Average Engagement Rate * Average Viewing Time) / Average Subscription Cost, providing a metric for Customer Lifetime Value potential relative to initial subscription cost.\"\n}\n```"
+        }
+      }
+    ],
+    "Edit Fields": [
+      {
+        "json": {
+          "question_analysis": "{\"question\":\"Which combinations of marketing Platform, ContentType, and AudienceType consistently yield the highest Return on Investment (ROI: Revenue, $ - Budget, $) and the lowest Subscription Cost, $ per new subscriber, enabling us to strategically reallocate marketing spend for maximum acquisition efficiency?\",\"data_summary\":\"Two datasets were analyzed: a campaign dataset with 50 campaign records and a subscriber dataset. The analysis focused on the campaign dataset, which contains details on platform, content, audience, budget, and revenue for each campaign.\",\"key_metrics\":\"The analysis focuses on two primary metrics: Return on Investment (ROI) and Cost Per Acquisition (CPA), calculated for each unique combination of Platform, Content Type, and Audience Type.\\n\\n**Top 5 Combinations by ROI (Revenue - Budget)**\\n| Combination | Total ROI | Total Budget | Total Revenue |\\n| :--- | :--- | :--- | :--- |\\n| IG-TV-Teens | 16,179 | 17,781 | 33,960 |\\n| TikTok-M-Adults | 11,493 | 9,522 | 21,015 |\\n| FB-M-Teens | 10,823 | 3,707 | 14,530 |\\n| FB-Doc-Teens | 9,795 | 3,945 | 13,740 |\\n| IG-M-YA | 9,723 | 17,037 | 26,760 |\\n\\n**Top 5 Combinations by Lowest Subscription Cost (CPA)**\\n| Combination | Avg CPA | Total Budget | Total Subs |\\n| :--- | :--- | :--- | :--- |\\n| YT-M-Teens | 1.57 | 1,484 | 947 |\\n| YT-Doc-Teens | 3.36 | 3,353 | 999 |\\n| FB-M-Teens | 3.47 | 3,707 | 1,068 |\\n| FB-Doc-Teens | 4.31 | 3,945 | 916 |\\n| TikTok-TV-Fam | 5.41 | 4,488 | 829 |\\n\\n*Abbreviations: IG (Instagram), FB (Facebook), YT (YouTube), M (Movie), Doc (Documentary), TV (TV Show), YA (Young Adults), Fam (Families)*\",\"insights\":[\"**The 'Teens' audience segment is the most valuable and efficient.** Campaigns targeting Teens dominate both the highest ROI and lowest CPA lists. Specifically, `Instagram-TV Show-Teens` delivered the highest absolute ROI ($16,179), while `YouTube-Movie-Teens` had the lowest subscription cost at an exceptional $1.57 per subscriber.\",\"**Platform efficiency varies significantly.** YouTube and Facebook are the most cost-efficient platforms for acquiring Teen subscribers, with the top four lowest CPA campaigns running on these platforms. In contrast, Instagram, while generating high ROI, has a higher average CPA for the same audience ($7.85 for 'IG-TV-Teens'). This indicates that while Instagram scales well for revenue, YouTube and Facebook are better for efficient subscriber growth.\"],\"recommendations\":\"To maximize acquisition efficiency, **aggressively reallocate marketing spend towards campaigns targeting the 'Teens' audience on YouTube and Facebook.** Prioritize scaling `YouTube-Movie-Teens` and `Facebook-Movie-Teens` combinations, as they offer the best balance of extremely low acquisition cost and high ROI. Continue to fund the high-performing `Instagram-TV Show-Teens` campaign, but focus on optimizing its creative and targeting to reduce its CPA.\",\"confidence_level\":\"high\",\"data_quality_notes\":\"The analysis is based on 50 campaign records, which provides a solid foundation. A larger dataset covering more campaigns would further strengthen the conclusions and help identify more granular patterns.\"}",
+          "visual": "{\"type\":\"bar\",\"data\":{\"labels\":[\"IG-TV-Teens\",\"TikTok-M-Adults\",\"FB-M-Teens\",\"FB-Doc-Teens\",\"IG-M-YA\"],\"datasets\":[{\"label\":\"Return on Investment ($)\",\"data\":[16179,11493,10823,9795,9723],\"backgroundColor\":\"rgba(54, 162, 235, 0.6)\"}]},\"options\":{\"responsive\":true,\"plugins\":{\"title\":{\"display\":true,\"text\":\"Top 5 Marketing Combinations by ROI ($)\"},\"legend\":{\"display\":false}},\"scales\":{\"y\":{\"beginAtZero\":true,\"title\":{\"display\":true,\"text\":\"Total ROI ($)\"}}}}}",
+          "description": "\"This bar chart displays the top five marketing combinations (Platform-ContentType-AudienceType) that generated the highest Return on Investment (ROI). It clearly shows that targeting 'Teens' on Instagram with TV Show content yields the highest absolute return, providing a clear direction for budget allocation.\""
+        }
+      },
+      {
+        "json": {
+          "question_analysis": "{\"question\":\"What are the distinct demographic profiles (Age, Gender, Location) of our most satisfied and engaged subscribers, and through which specific CampaignIDs or AudienceTypes were these high-value segments primarily acquired, informing future targeting strategies and potential market expansion opportunities?\",\"data_summary\":\"The analysis is based on two datasets: a subscriber dataset containing demographic and engagement information, and a campaign dataset detailing marketing activities. The analysis focused on identifying a high-value subscriber segment defined as those who are 'Very Satisfied' and have an Engagement Rate of 3 or higher.\",\"key_metrics\":\"Key metrics were calculated for the high-value subscriber segment (9 out of 50 total subscribers).\\n\\n| Metric | Value | Description |\\n| :--- | :--- | :--- |\\n| High-Value Subscribers | 9 | Subscribers who are 'Very Satisfied' with an Engagement Rate >= 3 |\\n| Acquisition Source | Campaign 1000 | All high-value subscribers were acquired from this single campaign |\\n| Primary Audience Type | Families | 89% of this segment came from the 'Families' audience target |\\n| Primary Gender | Female | 56% of high-value subscribers are Female |\\n| Key Markets | N America, Asia | These two locations account for 67% of the high-value segment |\\n| Core Age Range | 24-45 | 56% of high-value subscribers fall within this age bracket |\",\"insights\":[\"The profile of our most valuable subscriber is a **female aged 24-45, located in either North America or Asia**. This demographic group shows the highest combination of satisfaction and engagement, representing 56% of the high-value segment. For example, 3 of the 9 identified high-value subscribers are from North America, all are female, and their ages (24, 44, 45) are within or near this primary bracket.\",\"The **'Families' audience type is the primary source of high-value subscribers**. An overwhelming 89% (8 out of 9) of the most satisfied and engaged subscribers were acquired through targeting this specific audience. This indicates that messaging and content tailored to families are highly effective at attracting and retaining a loyal user base. All of these acquisitions were driven by CampaignID 1000.\"],\"recommendations\":\"Future marketing investment should be strategically focused on the **'Families' audience segment in North America and Asia**. Tailor campaign creative and messaging to resonate with females aged 24-45 to maximize the acquisition of subscribers who are most likely to be satisfied and engaged. Consider launching lookalike audience campaigns based on this specific demographic profile to identify new market expansion opportunities.\",\"confidence_level\":\"high\",\"data_quality_notes\":\"The insights are derived from a small but distinct group of 9 high-value subscribers from a single campaign. While the trend is clear, expanding the analysis to include data from more campaigns would strengthen the conclusions.\"}",
+          "visual": "{\"type\":\"bar\",\"data\":{\"labels\":[\"N. America\",\"Asia\",\"Africa\",\"Australia\",\"S. America\"],\"datasets\":[{\"label\":\"High-Value Users\",\"data\":[3,3,1,1,1],\"backgroundColor\":\"rgba(54, 162, 235, 0.6)\"}]},\"options\":{\"responsive\":true,\"plugins\":{\"title\":{\"display\":true,\"text\":\"High-Value Subscribers by Location\"},\"legend\":{\"display\":false}},\"scales\":{\"y\":{\"beginAtZero\":true,\"ticks\":{\"stepSize\":1}}}}}",
+          "description": "\"This bar chart displays the geographic distribution of the most satisfied and engaged subscribers. It clearly shows that North America and Asia are the top-performing regions, each contributing three high-value users, making them key markets for future targeting.\""
+        }
+      },
+      {
+        "json": {
+          "question_analysis": "{\"question\":\"Which combinations of `Platform`, `ContentType`, and `AudienceType` from our campaigns are most effective at acquiring subscribers who demonstrate the highest `EngagementRate` and `ViewingTime`, indicating superior Customer Lifetime Value potential, relative to their initial `Subscription Cost`?\",\"data_summary\":\"Two datasets were analyzed: `Subscriber_dataset1` providing subscriber-level engagement and viewing time, and `Campaign_dataset1` detailing campaign specifics including platform, content type, audience type, and subscription cost. The datasets were merged on `CampaignID` to link subscriber behavior to campaign attributes.\",\"key_metrics\":\"| Combination (Platform-ContentType-AudienceType) | Avg Engagement Rate | Avg Viewing Time | Avg Subscription Cost | Effectiveness Score |\\n|---|---|---|---|---|\\n| Blogs-Movie-Families | 3.25 | 2779.5 | 15.0 | 600.52 |\\n| Instagram-TV Show-Teens | 4.0 | 2582.0 | 15.0 | 688.53 |\\n| Instagram-Movie-Young Adults | 3.0 | 2568.5 | 15.0 | 513.7 |\\n| Instagram-Movie-Families | 3.0 | 2664.0 | 10.0 | 799.2 |\\n| YouTube-Movie-Young Adults | 4.0 | 2768.5 | 12.5 | 885.92 |\\n| YouTube-Documentary-Young Adults | 3.5 | 2900.5 | 15.0 | 676.78 |\\n| YouTube-TV Show-Adults | 3.0 | 2405.0 | 15.0 | 481.0 |\\n| YouTube-Documentary-Teens | 3.0 | 2843.5 | 10.0 | 853.05 |\\n| YouTube-TV Show-Families | 3.25 | 2633.5 | 12.5 | 684.71 |\\n| TikTok-Movie-Young Adults | 4.0 | 2715.0 | 15.0 | 724.0 |\\n| TikTok-TV Show-Families | 3.0 | 2786.0 | 10.0 | 835.8 |\\n| TikTok-Documentary-Young Adults | 4.0 | 2642.0 | 15.0 | 704.53 |\\n| TikTok-Movie-Adults | 3.0 | 2891.5 | 15.0 | 578.3 |\\n| Facebook-Documentary-Adults | 3.0 | 2688.0 | 10.0 | 806.4 |\\n| Facebook-Documentary-Young Adults | 3.0 | 2688.0 | 10.0 | 806.4 |\\n| Facebook-Movie-Teens | 3.0 | 2919.0 | 12.5 | 699.29 |\\n| Facebook-Movie-Adults | 3.0 | 2760.0 | 10.0 | 828.0 |\\n| Instagram-Movie-Teens | 3.0 | 2575.0 | 12.5 | 618.0 |\\n| Blogs-TV Show-Young Adults | 3.0 | 2623.5 | 15.0 | 524.7 |\\n| Blogs-Documentary-Teens | 3.0 | 2439.0 | 12.5 | 585.36 |\\n| Blogs-Movie-Teens | 3.0 | 2776.0 | 15.0 | 555.2 |\\n| Blogs-Movie-Adults | 3.0 | 2720.0 | 15.0 | 544.0 |\\n| Blogs-Documentary-Families | 3.0 | 2776.0 | 12.5 | 666.24 |\",\"insights\":[\"**1. Instagram-Movie-Families**: This combination demonstrates exceptional performance with an Effectiveness Score of 799.2. Subscribers acquired through this combination show an average engagement rate of 3.0 and average viewing time of 2664.0 minutes, all while maintaining an average subscription cost of 10.0.\",\"**2. Facebook-Movie-Adults**: This combination demonstrates exceptional performance with an Effectiveness Score of 828.0. Subscribers acquired through this combination show an average engagement rate of 3.0 and average viewing time of 2760.0 minutes, all while maintaining an average subscription cost of 10.0.\",\"**3. Facebook-Documentary-Adults**: This combination demonstrates exceptional performance with an Effectiveness Score of 806.4. Subscribers acquired through this combination show an average engagement rate of 3.0 and average viewing time of 2688.0 minutes, all while maintaining an average subscription cost of 10.0.\"],\"recommendations\":\"Focus future campaign investments on combinations of Platform, ContentType, and AudienceType that yield high Effectiveness Scores. Specifically, explore strategies to replicate the success factors of the top-performing combinations, such as targeted content creation and audience segmentation. Investigate if the lower subscription cost in some high-performing combinations is a primary driver or if other factors contribute to the higher relative value.\",\"confidence_level\":\"high\",\"data_quality_notes\":\"The analysis relies on the accuracy and completeness of `EngagementRate`, `ViewingTime`, and `Subscription Cost` data in the provided datasets. The definition of 'Customer Lifetime Value potential' is approximated using the Effectiveness Score calculated from engagement, viewing time, and subscription cost.\"}",
+          "visual": "{\"type\":\"bar\",\"data\":{\"labels\":[\"Insta-Fam-Mov\",\"Faceb-Adu-Mov\",\"Faceb-Adu-Doc\"],\"datasets\":[{\"label\":\"Effectiveness Score\",\"data\":[799.2,828,806.4],\"backgroundColor\":\"rgba(75, 192, 192, 0.6)\"}]},\"options\":{\"indexAxis\":\"y\",\"responsive\":true,\"plugins\":{\"title\":{\"display\":true,\"text\":\"Top 3 Combinations by Effectiveness Score\"}},\"scales\":{\"x\":{\"beginAtZero\":true,\"title\":{\"display\":true,\"text\":\"Effectiveness Score\"}},\"y\":{\"title\":{\"display\":true,\"text\":\"Combination\"}}}}}",
+          "description": "\"This bar chart illustrates the Effectiveness Score for the top 3 performing combinations of Platform, ContentType, and AudienceType. The Effectiveness Score is calculated as (Average Engagement Rate * Average Viewing Time) / Average Subscription Cost, providing a metric for Customer Lifetime Value potential relative to initial subscription cost.\""
+        }
+      }
+    ]
+  },
   "connections": {
     "Google Gemini Chat Model": {
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Question Analysis",
             "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent": {
-      "main": [
-        [
-          {
-            "node": "Wait",
-            "type": "main",
             "index": 0
           }
         ]
@@ -436,7 +827,7 @@
       "ai_tool": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Question Analysis",
             "type": "ai_tool",
             "index": 0
           }
@@ -447,7 +838,7 @@
       "ai_tool": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Question Analysis",
             "type": "ai_tool",
             "index": 0
           }
@@ -457,6 +848,11 @@
     "When clicking ‘Execute workflow’": {
       "main": [
         [
+          {
+            "node": "Dashboard Reporting",
+            "type": "main",
+            "index": 0
+          },
           {
             "node": "Get Tables",
             "type": "main",
@@ -491,7 +887,7 @@
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent1",
+            "node": "Brainstorming - Questions Genration",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -502,18 +898,7 @@
       "main": [
         [
           {
-            "node": "Edit Fields2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields2": {
-      "main": [
-        [
-          {
-            "node": "Aggregate",
+            "node": "Extract column names",
             "type": "main",
             "index": 0
           }
@@ -524,29 +909,7 @@
       "main": [
         [
           {
-            "node": "AI Agent1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent1": {
-      "main": [
-        [
-          {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code": {
-      "main": [
-        [
-          {
-            "node": "Questions Split Out",
+            "node": "Brainstorming - Questions Genration",
             "type": "main",
             "index": 0
           }
@@ -557,7 +920,7 @@
       "main": [
         [
           {
-            "node": "Code2",
+            "node": "Markdown File Generation",
             "type": "main",
             "index": 0
           }
@@ -568,18 +931,7 @@
       "main": [
         [
           {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Wait": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields",
+            "node": "AI Question Analysis",
             "type": "main",
             "index": 0
           }
@@ -597,11 +949,267 @@
         ]
       ]
     },
-    "Code2": {
+    "Extract column names": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "New Question Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brainstorming - Questions Genration": {
+      "main": [
+        [
+          {
+            "node": "Question Compilation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "New Question Generation",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question Analysis",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Campaign_dataset1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Question Analysis",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subscriber_dataset1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Question Analysis",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "New Question Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Dashboard Reporting",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Campaign_dataset2": {
+      "ai_tool": [
+        [
+          {
+            "node": "Dashboard Reporting",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subscriber_dataset2": {
+      "ai_tool": [
+        [
+          {
+            "node": "Dashboard Reporting",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Question Analysis": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Question Generation": {
+      "main": [
+        [
+          {
+            "node": "Question Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question Analysis": {
+      "main": [
+        [
+          {
+            "node": "Split Out2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dashboard Reporting": {
+      "main": [
+        [
+          {
+            "node": "Dashboard Report Compilation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown File Generation": {
       "main": [
         [
           {
             "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dashboard file": {
+      "main": [
+        [
+          {
+            "node": "Markdown File Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out2": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dashboard Report Compilation": {
+      "main": [
+        [
+          {
+            "node": "Dashboard file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question Compilation": {
+      "main": [
+        [
+          {
+            "node": "Questions Split Out",
             "type": "main",
             "index": 0
           }
@@ -613,11 +1221,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "693091d0-90f1-4430-8dcf-83fad96af1f8",
+  "versionId": "8fe985a6-5a8e-4448-87ba-08aa8f1c7bf2",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "af69c3a4f4904570a9e590cc60e69a2eb5a9cb5718e67365be3119309ab30188"
   },
-  "id": "SoAo99Qo5xS8veSu",
+  "id": "yQegtNiLEJGGlLMK",
   "tags": []
 }
